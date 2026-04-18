@@ -13,8 +13,21 @@ class RealsenseCapture:
         self.config.enable_stream(rs.stream.depth, self.WIDTH, self.HEGIHT, rs.format.z16, self.FPS)
 
     def start(self):
-        # Start streaming
+        # Start streaming with a check to see that the camera actually has a RGB color sensor if not we exit
         self.pipeline = rs.pipeline()
+        # Serial number required when connecting multiple units. Not necessary for a single unit.
+        self.config.enable_device()
+        self.pipeline_wrapper = rs.pipeline_wrapper(self.pipeline)
+        self.pipeline_profile = self.config.resolve(self.pipeline_wrapper)
+        self.device = self.pipeline_profile.get_device()
+        found_rgb = False
+        for s in self.device.sensors:
+            if s.get_info(rs.camera_info.name) == 'RGB Camera':
+                found_rgb = True
+                break
+            if not found_rgb:
+                print("The demo requires Depth camera with a Color sensor.. exiting")
+                exit(0)        
         self.pipeline.start(self.config)
         print('pipline start')
 

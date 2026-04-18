@@ -25,9 +25,9 @@ class RealsenseCapture:
             if s.get_info(rs.camera_info.name) == 'RGB Camera':
                 found_rgb = True
                 break
-            if not found_rgb:
-                print("The demo requires Depth camera with a Color sensor.. exiting")
-                exit(0)        
+        if not found_rgb:
+            print("The demo requires Depth camera with a Color sensor.. exiting")
+            exit(0)        
         self.pipeline.start(self.config)
         print('pipline start')
 

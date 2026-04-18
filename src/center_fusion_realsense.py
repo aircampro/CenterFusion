@@ -58,12 +58,18 @@ def demo(opt):
       cnt += 1
       _, img = cam.read()
 	  if opt.demo == 'realsense':                                             # use the color image from the realsense camera
-        img = img[0]
+        if img[0] == None:
+          continue
+        else:
+          img = img[0]
       elif opt.demo == 'realsensecomb':                                       # use combined color and depth frames 
-        color_frame = img[0]
-        depth_frame = img[1]
-        depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_frame, alpha=0.08), cv2.COLORMAP_JET)
-        img = np.hstack((color_frame, depth_colormap))  
+        if img[0] == None or img[1] == None:
+          continue
+        else:
+          color_frame = img[0]
+          depth_frame = img[1]
+          depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_frame, alpha=0.08), cv2.COLORMAP_JET)
+          img = np.hstack((color_frame, depth_colormap))  
       if opt.resize_video:
         try:
           img = cv2.resize(img, (opt.video_w, opt.video_h))
